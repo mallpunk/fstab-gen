@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<!-- saved from url=(0025)https://epistel.no/fstab/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>The fstab line generator</title>
+    <style type="text/css">
+      html, body {
+      font-family: sans-serif;
+      }
+      h1 {
+      border: 5px solid #80C31C;
+      background: #BCDD5A;
+      padding: 0.5em;
+      }
+      h2, h3 {
+      color: #60a31C;
+      }
+      fieldset {
+      background: #F0FFF0;
+      }
+      table {
+      margin-top: 1em;
+      border-collapse:collapse;
+      }
+      table,td,th {
+      border: 1px solid black;
+      padding: 2px;
+      background: #DEFF9B;
+      }
+      th {
+      text-align: left;
+      }
+      dt {
+      font-weight: bold;
+      margin-top: 1em;
+      }
+      #device,#mountpoint {
+      width: 16em;
+      }
+      #dump,#fsck {
+      width: 2em;
+      }
+      #output {
+      width: 100%;
+      }
+    </style>
+
+    <script type="text/javascript">
+      function makeFstab() {
+      // Array to keep the data collected from the form
+      var output = new Object();
+
+      // Fetching and interpreting data from form
+      output['device'] = document.fstabdata.device.value;
+      output['mountpoint'] = document.fstabdata.mountpoint.value;
+      output['filesystem'] = document.fstabdata.filesystem.value;
+
+      if (document.fstabdata.automount.checked == true) {
+        output['automount'] = 'auto';
+      }
+      else {
+        output['automount'] = 'noauto';
+      }
+
+      if (document.fstabdata.usermount.checked == true) {
+        output['usermount'] = 'user';
+      }
+      else {
+        output['usermount'] = 'nouser';
+      }
+
+      if (document.fstabdata.exec.checked == true) {
+        output['exec'] = 'exec';
+      }
+      else {
+        output['exec'] = 'noexec';
+      }
+
+      if (document.fstabdata.writable.checked == true) {
+        output['writable'] = 'rw';
+      }
+      else {
+        output['writable'] = 'ro';
+      }
+
+      if (document.fstabdata.sync.checked == true) {
+        output['sync'] = 'sync';
+      }
+      else {
+        output['sync'] = 'async';
+      }
+
+      if (document.fstabdata.atime.checked == true) {
+        output['atime'] = 'atime';
+      }
+      else {
+        output['atime'] = 'noatime';
+      }
+
+
+      output['dump'] = document.fstabdata.dump.value;
+      output['fsck'] = document.fstabdata.fsck.value;
+
+      // Get additional input, if defined
+
+      if (document.fstabdata.iocharset.value != '') {
+        output['iocharset'] = document.fstabdata.iocharset.value;
+      }
+
+      if (document.fstabdata.user.value != '') {
+        output['user'] = document.fstabdata.user.value;
+      }
+
+      if (document.fstabdata.pass.value != '') {
+        output['pass'] = document.fstabdata.pass.value;
+      }
+
+      // Combine values into fstab line with the correct order and separators
+      // Where and what
+      var outputstring = (output['device'] + "\t" + output['mountpoint'] + "\t" + output['filesystem'] + "\t");
+
+      // Optional options
+      if (output['iocharset']) {
+        outputstring += ("iocharset=" + output['iocharset'] + ",")
+      }
+      if (output['user']) {
+        outputstring += ("user=" + output['user'] + ",")
+      }
+      if (output['pass']) {
+        outputstring += ("pass=" + output['pass'] + ",")
+      }
+
+
+      // Standard options
+      outputstring += (output['automount'] + "," + output['usermount'] + "," + output['exec'] + "," + output['writable'] + "," + output['sync'] + "," + output['atime'] + "\t" + output['dump'] + " " + output['fsck']);
+
+      // Output the output
+      document.fstabdata.output.value = outputstring;
+      
+      }
+    </script>
+  </head>
+
+  <body>
+    
+    <h1>The fstab line generator</h1>
+
+    <h2>Q&amp;A</h2>
+
+    <dl>
+      <dt>What is it?</dt>
+      <dd>A simple GUI for creating a line to put into /etc/fstab. If that sounds like gibberish to you, you probably don't need this. Go <a href="http://icanhascheezburger.com/">surf lolcats</a> instead.</dd>
+      <dt>Why did you make it?</dt>
+      <dd>Because I'm a lazy bum.</dd>
+      <dt>Why did you put it online?</dt>
+      <dd>Because you're probably a lazy bum too.</dd>
+      <dt>I notice it doesn't have every filesystem and every possible option. Will you add more options?</dt>
+      <dd>Sure. I only put in stuff I've found myself needing. <a href="mailto:eira@epistel.no">Send me an email</a> if there's anything specific you'd like me to add.</dd>
+    </dl>
+
+    <h2>The Generator</h2>
+
+    <form id="fstabdata" name="fstabdata">
+      <fieldset>
+	<table>
+	  <tbody><tr>
+	    <th><label for="device">Device address</label></th>
+	    <th><label for="mountpoint">Mount point</label></th>
+	    <th><label for="filesystem">Filesystem</label></th>
+	    <th><label for="automount">Auto mount</label></th>
+	    <th><label for="usermount">User can mount</label></th>
+	    <th><label for="exec">Executable</label></th>
+	    <th><label for="writable">Writable</label></th>
+	    <th><label for="sync">Sync</label></th>
+	    <th><label for="atime">Atime</label></th>
+	    <th><label for="dump">Dump</label></th>
+	    <th><label for="fsck">Fsck</label></th>
+	  </tr>
+	  <tr>
+	    <td><input id="device" name="device" type="text"></td>
+	    <td><input id="mountpoint" name="mountpoint" type="text"></td>
+	    <td>
+	      <select id="filesystem" name="filesystem">
+		<option value="auto" selected="">auto</option>
+		<option value="ext2">ext2</option>
+		<option value="ext3">ext3</option>
+		<option value="ext4">ext4</option>
+		<option value="cifs">cifs</option>
+		<option value="nfs">nfs</option>
+		<option value="smbfs">smbfs</option>
+		<option value="vfat">vfat</option>
+		<option value="ntfs">ntfs</option>
+		<option value="reiserfs">reiserfs</option>
+		<option value="sshfs">sshfs</option>
+	      </select>
+	    </td>
+	    <td><input id="automount" name="automount" type="checkbox" checked=""></td>
+	    <td><input id="usermount" name="usermount" type="checkbox"></td>
+	    <td><input id="exec" name="exec" type="checkbox" checked=""></td>
+	    <td><input id="writable" name="writable" type="checkbox" checked=""></td>
+	    <td><input id="sync" name="sync" type="checkbox"></td>
+	    <td><input id="atime" name="atime" type="checkbox" checked=""></td>
+	    <td><input id="dump" name="dump" type="text" value="0"></td>
+	    <td><input id="fsck" name="fsck" type="text" value="0"></td>
+	  </tr>
+	</tbody></table>
+	
+	<table>
+	  <tbody><tr>
+	    <th><label for="iocharset">Input/output charset</label></th>
+	    <td><input id="iocharset" name="iocharset" type="text"></td>
+	  </tr>
+	  <tr>
+	    <th><label for="user">Username</label></th>
+	    <td><input id="user" name="user" type="text"><div data-lastpass-icon-root="" style="position: relative !important; height: 0px !important; width: 0px !important; float: left !important;"><template shadowrootmode="closed"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" data-lastpass-icon="true" style="position: absolute; cursor: pointer; height: 17px; max-height: 17px; width: 22px; max-width: 22px; top: 2px; left: 156px; z-index: auto; color: rgb(215, 64, 58);"><rect x="0.680176" y="0.763062" width="22.6392" height="22.4737" rx="4" fill="currentColor"></rect><path fill-rule="evenodd" clip-rule="evenodd" d="M19.7935 7.9516C19.7935 7.64414 20.0427 7.3949 20.3502 7.3949C20.6576 7.3949 20.9069 7.64414 20.9069 7.9516V16.0487C20.9069 16.3562 20.6576 16.6054 20.3502 16.6054C20.0427 16.6054 19.7935 16.3562 19.7935 16.0487V7.9516Z" fill="white"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M4.76288 13.6577C5.68525 13.6577 6.43298 12.9154 6.43298 11.9998C6.43298 11.0842 5.68525 10.3419 4.76288 10.3419C3.8405 10.3419 3.09277 11.0842 3.09277 11.9998C3.09277 12.9154 3.8405 13.6577 4.76288 13.6577Z" fill="white"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M10.3298 13.6577C11.2521 13.6577 11.9999 12.9154 11.9999 11.9998C11.9999 11.0842 11.2521 10.3419 10.3298 10.3419C9.4074 10.3419 8.65967 11.0842 8.65967 11.9998C8.65967 12.9154 9.4074 13.6577 10.3298 13.6577Z" fill="white"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M15.8964 13.6577C16.8188 13.6577 17.5665 12.9154 17.5665 11.9998C17.5665 11.0842 16.8188 10.3419 15.8964 10.3419C14.974 10.3419 14.2263 11.0842 14.2263 11.9998C14.2263 12.9154 14.974 13.6577 15.8964 13.6577Z" fill="white"></path></svg></template></div></td>
+	  </tr>
+	  <tr>
+	    <th><label for="pass">Password</label></th>
+	    <td><input id="pass" name="pass" type="text"></td>
+	  </tr>
+	</tbody></table>
+	
+	<p><input type="button" value="Generate fstab line" onclick="makeFstab()"></p>
+
+	<h3>Output</h3>
+
+	<p><input id="output" name="output" type="text"></p>
+
+      </fieldset>
+
+    </form>
+
+  
+
+<div data-lastpass-root="" style="position: absolute !important; top: 0px !important; left: 0px !important; height: 0px !important; width: 0px !important;"><template shadowrootmode="closed"><div style="position: absolute; height: 100vh; width: 100vw; z-index: 2147483647; border-radius: 4px; top: 0px; left: 0px; max-height: 0px; max-width: 280px; min-width: auto;"><iframe data-lastpass-infield="true" allow="clipboard-write" src="chrome-extension://hdokiejnpimakedhajhdlcegeplioahd/webclient-infield.html" style="border: none; height: 100%; width: 100%;"></iframe></div></template></div></body></html>
