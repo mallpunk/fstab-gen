@@ -47,97 +47,67 @@
 
     <script type="text/javascript">
       function makeFstab() {
-      // Array to keep the data collected from the form
-      var output = new Object();
+        // Object to keep the data collected from the form
+        const output = {};
 
-      // Fetching and interpreting data from form
-      output['device'] = document.fstabdata.device.value;
-      output['mountpoint'] = document.fstabdata.mountpoint.value;
-      output['filesystem'] = document.fstabdata.filesystem.value;
+        // Fetching and interpreting data from form
+        output.device = document.fstabdata.device.value;
+        output.mountpoint = document.fstabdata.mountpoint.value;
+        output.filesystem = document.fstabdata.filesystem.value;
 
-      if (document.fstabdata.automount.checked == true) {
-        output['automount'] = 'auto';
-      }
-      else {
-        output['automount'] = 'noauto';
-      }
+        // Handle checkbox options with ternary operators
+        output.automount = document.fstabdata.automount.checked ? 'auto' : 'noauto';
+        output.usermount = document.fstabdata.usermount.checked ? 'user' : 'nouser';
+        output.exec = document.fstabdata.exec.checked ? 'exec' : 'noexec';
+        output.writable = document.fstabdata.writable.checked ? 'rw' : 'ro';
+        output.sync = document.fstabdata.sync.checked ? 'sync' : 'async';
+        output.atime = document.fstabdata.atime.checked ? 'atime' : 'noatime';
 
-      if (document.fstabdata.usermount.checked == true) {
-        output['usermount'] = 'user';
-      }
-      else {
-        output['usermount'] = 'nouser';
-      }
+        output.dump = document.fstabdata.dump.value;
+        output.fsck = document.fstabdata.fsck.value;
 
-      if (document.fstabdata.exec.checked == true) {
-        output['exec'] = 'exec';
-      }
-      else {
-        output['exec'] = 'noexec';
-      }
+        // Get additional input, if defined
+        if (document.fstabdata.iocharset.value !== '') {
+          output.iocharset = document.fstabdata.iocharset.value;
+        }
 
-      if (document.fstabdata.writable.checked == true) {
-        output['writable'] = 'rw';
-      }
-      else {
-        output['writable'] = 'ro';
-      }
+        if (document.fstabdata.user.value !== '') {
+          output.user = document.fstabdata.user.value;
+        }
 
-      if (document.fstabdata.sync.checked == true) {
-        output['sync'] = 'sync';
-      }
-      else {
-        output['sync'] = 'async';
-      }
+        if (document.fstabdata.pass.value !== '') {
+          output.pass = document.fstabdata.pass.value;
+        }
 
-      if (document.fstabdata.atime.checked == true) {
-        output['atime'] = 'atime';
-      }
-      else {
-        output['atime'] = 'noatime';
-      }
+        // Combine values into fstab line with the correct order and separators
+        // Where and what
+        let outputstring = `${output.device}\t${output.mountpoint}\t${output.filesystem}\t`;
 
+        // Optional options
+        if (output.iocharset) {
+          outputstring += `iocharset=${output.iocharset},`;
+        }
+        if (output.user) {
+          outputstring += `user=${output.user},`;
+        }
+        if (output.pass) {
+          outputstring += `pass=${output.pass},`;
+        }
 
-      output['dump'] = document.fstabdata.dump.value;
-      output['fsck'] = document.fstabdata.fsck.value;
+        // Standard options
+        outputstring += `${output.automount},${output.usermount},${output.exec},${output.writable},${output.sync},${output.atime}\t${output.dump} ${output.fsck}`;
 
-      // Get additional input, if defined
-
-      if (document.fstabdata.iocharset.value != '') {
-        output['iocharset'] = document.fstabdata.iocharset.value;
+        // Output the output
+        document.fstabdata.output.value = outputstring;
       }
 
-      if (document.fstabdata.user.value != '') {
-        output['user'] = document.fstabdata.user.value;
-      }
-
-      if (document.fstabdata.pass.value != '') {
-        output['pass'] = document.fstabdata.pass.value;
-      }
-
-      // Combine values into fstab line with the correct order and separators
-      // Where and what
-      var outputstring = (output['device'] + "\t" + output['mountpoint'] + "\t" + output['filesystem'] + "\t");
-
-      // Optional options
-      if (output['iocharset']) {
-        outputstring += ("iocharset=" + output['iocharset'] + ",")
-      }
-      if (output['user']) {
-        outputstring += ("user=" + output['user'] + ",")
-      }
-      if (output['pass']) {
-        outputstring += ("pass=" + output['pass'] + ",")
-      }
-
-
-      // Standard options
-      outputstring += (output['automount'] + "," + output['usermount'] + "," + output['exec'] + "," + output['writable'] + "," + output['sync'] + "," + output['atime'] + "\t" + output['dump'] + " " + output['fsck']);
-
-      // Output the output
-      document.fstabdata.output.value = outputstring;
-      
-      }
+      // Add event listener when DOM is loaded
+      document.addEventListener('DOMContentLoaded', function() {
+        const generateBtn = document.getElementById('generateBtn');
+        if (generateBtn) {
+          generateBtn.addEventListener('click', makeFstab);
+        }
+      });
     </script>
   </head>
 
@@ -220,7 +190,7 @@
 	  </tr>
 	</tbody></table>
 	
-	<p><input type="button" value="Generate fstab line" onclick="makeFstab()"></p>
+	<p><input type="button" value="Generate fstab line" id="generateBtn"></p>
 
 	<h3>Output</h3>
 
