@@ -1,5 +1,5 @@
 {
-  "name": "fstab",
+  "name": "fstab-gen",
   "version": "1.0.0",
   "description": "A simple web UI to generate config lines for fstab",
   "main": "index.js",
@@ -18,8 +18,12 @@
     "mount",
     "linux"
   ],
-  "author": "",
-  "license": "ISC",
+  "author": {
+    "name": "Eira Monstad",
+    "email": "eira@epistel.no",
+    "url": "https://epistel.no/"
+  },
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/mallpunk/fstab-gen/issues"
   },
