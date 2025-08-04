@@ -5,9 +5,9 @@ A simple web UI to generate configuration lines for `/etc/fstab`. This tool help
 ## Features
 
 - **Self-contained**: Single HTML file with embedded CSS and JavaScript
-- **Multiple filesystem support**: ext2, ext3, ext4, cifs, nfs, smbfs, vfat, ntfs, reiserfs, sshfs
+- **Multiple filesystem support**: ext2, ext3, ext4, cifs, nfs, smbfs, vfat, ntfs, reiserfs, sshfs, zfs
 - **Configurable options**: Auto mount, user mount, executable, writable, sync, atime
-- **Additional parameters**: iocharset, username, password support
+- **Additional parameters**: iocharset, username, password, uid, gid, umask support
 - **Proper formatting**: Generates tab-separated fstab lines with correct field order
 
 ## Usage

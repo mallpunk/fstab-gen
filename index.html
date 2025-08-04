@@ -152,6 +152,9 @@
           output.umask = umask;
         }
 
+        // ZFS-specific options
+        output.zfsutil = document.fstabdata.zfsutil.checked;
+
         // Combine values into fstab line with the correct order and separators
         // Where and what
         let outputstring = `${output.device}\t${output.mountpoint}\t${output.filesystem}\t`;
@@ -174,6 +177,9 @@
         }
         if (output.umask) {
           outputstring += `umask=${output.umask},`;
+        }
+        if (output.zfsutil) {
+          outputstring += `zfsutil,`;
         }
 
         // Standard options
@@ -244,6 +250,7 @@
 		<option value="ntfs">ntfs</option>
 		<option value="reiserfs">reiserfs</option>
 		<option value="sshfs">sshfs</option>
+		<option value="zfs">zfs</option>
 	      </select>
 	    </td>
 	    <td><input id="automount" name="automount" type="checkbox" checked=""></td>
@@ -281,6 +288,10 @@
 	  <tr>
 	    <th><label for="umask">Umask</label></th>
 	    <td><input id="umask" name="umask" type="text" placeholder="e.g., 022"></td>
+	  </tr>
+	  <tr>
+	    <th><label for="zfsutil">ZFS util</label></th>
+	    <td><input id="zfsutil" name="zfsutil" type="checkbox"></td>
 	  </tr>
 	</tbody></table>
 	

@@ -217,6 +217,33 @@ describe('fstab line generator', () => {
 
       expect(output).toBe('//server/share\t/mnt/network\tcifs\tuid=1000,gid=1000,umask=077,auto,nouser,exec,rw,async,atime\t0 0');
     });
+
+    test('should handle ZFS filesystem', () => {
+      createMockForm({
+        device: 'tank/data',
+        mountpoint: '/mnt/zfs',
+        filesystem: 'zfs'
+      });
+
+      makeFstab();
+      const output = getOutputValue();
+
+      expect(output).toBe('tank/data\t/mnt/zfs\tzfs\tauto,nouser,exec,rw,async,atime\t0 0');
+    });
+
+    test('should include zfsutil option when checked', () => {
+      createMockForm({
+        device: 'tank/data',
+        mountpoint: '/mnt/zfs',
+        filesystem: 'zfs',
+        zfsutil: true
+      });
+
+      makeFstab();
+      const output = getOutputValue();
+
+      expect(output).toBe('tank/data\t/mnt/zfs\tzfs\tzfsutil,auto,nouser,exec,rw,async,atime\t0 0');
+    });
   });
 
   describe('input validation', () => {
