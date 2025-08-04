@@ -244,6 +244,19 @@ describe('fstab line generator', () => {
 
       expect(output).toBe('tank/data\t/mnt/zfs\tzfs\tzfsutil,auto,nouser,exec,rw,async,atime\t0 0');
     });
+
+    test('should handle XFS filesystem', () => {
+      createMockForm({
+        device: '/dev/sda1',
+        mountpoint: '/mnt/xfs',
+        filesystem: 'xfs'
+      });
+
+      makeFstab();
+      const output = getOutputValue();
+
+      expect(output).toBe('/dev/sda1\t/mnt/xfs\txfs\tauto,nouser,exec,rw,async,atime\t0 0');
+    });
   });
 
   describe('input validation', () => {
