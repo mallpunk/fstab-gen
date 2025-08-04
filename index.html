@@ -213,7 +213,7 @@
       <dt>Why did you put it online?</dt>
       <dd>Because you're probably a lazy bum too.</dd>
       <dt>I notice it doesn't have every filesystem and every possible option. Will you add more options?</dt>
-      <dd>Sure. I only put in stuff I've found myself needing. <a href="mailto:eira@epistel.no">Send me an email</a> if there's anything specific you'd like me to add.</dd>
+      <dd>Sure. I only put in stuff I've found myself needing. <a href="mailto:eira@epistel.no">Send me an email</a> or create a <a href="https://github.com/mallpunk/fstab-gen">PR</a> if there's anything specific you'd like me to add.</dd>
     </dl>
 
     <h2>The Generator</h2>
@@ -235,8 +235,8 @@
 	    <th><label for="fsck">Fsck</label></th>
 	  </tr>
 	  <tr>
-	    <td><input id="device" name="device" type="text"></td>
-	    <td><input id="mountpoint" name="mountpoint" type="text"></td>
+	    <td><input id="device" name="device" type="text" placeholder="e.g., /dev/sda1"></td>
+	    <td><input id="mountpoint" name="mountpoint" type="text" placeholder="e.g., /mnt/data"></td>
 	    <td>
 	      <select id="filesystem" name="filesystem">
 		<option value="auto" selected="">auto</option>
@@ -259,23 +259,23 @@
 	    <td><input id="writable" name="writable" type="checkbox" checked=""></td>
 	    <td><input id="sync" name="sync" type="checkbox"></td>
 	    <td><input id="atime" name="atime" type="checkbox" checked=""></td>
-	    <td><input id="dump" name="dump" type="text" value="0"></td>
-	    <td><input id="fsck" name="fsck" type="text" value="0"></td>
+	    <td><input id="dump" name="dump" type="text" value="0" placeholder="0 or 1"></td>
+	    <td><input id="fsck" name="fsck" type="text" value="0" placeholder="0, 1, or 2"></td>
 	  </tr>
 	</tbody></table>
 	
 	<table>
-	  <tbody><tr>
+	  <tbody>	  <tr>
 	    <th><label for="iocharset">Input/output charset</label></th>
-	    <td><input id="iocharset" name="iocharset" type="text"></td>
+	    <td><input id="iocharset" name="iocharset" type="text" placeholder="e.g., utf8"></td>
 	  </tr>
 	  <tr>
 	    <th><label for="user">Username</label></th>
-	    <td><input id="user" name="user" type="text"><div data-lastpass-icon-root="" style="position: relative !important; height: 0px !important; width: 0px !important; float: left !important;"><template shadowrootmode="closed"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" data-lastpass-icon="true" style="position: absolute; cursor: pointer; height: 17px; max-height: 17px; width: 22px; max-width: 22px; top: 2px; left: 156px; z-index: auto; color: rgb(215, 64, 58);"><rect x="0.680176" y="0.763062" width="22.6392" height="22.4737" rx="4" fill="currentColor"></rect><path fill-rule="evenodd" clip-rule="evenodd" d="M19.7935 7.9516C19.7935 7.64414 20.0427 7.3949 20.3502 7.3949C20.6576 7.3949 20.9069 7.64414 20.9069 7.9516V16.0487C20.9069 16.3562 20.6576 16.6054 20.3502 16.6054C20.0427 16.6054 19.7935 16.3562 19.7935 16.0487V7.9516Z" fill="white"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M4.76288 13.6577C5.68525 13.6577 6.43298 12.9154 6.43298 11.9998C6.43298 11.0842 5.68525 10.3419 4.76288 10.3419C3.8405 10.3419 3.09277 11.0842 3.09277 11.9998C3.09277 12.9154 3.8405 13.6577 4.76288 13.6577Z" fill="white"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M10.3298 13.6577C11.2521 13.6577 11.9999 12.9154 11.9999 11.9998C11.9999 11.0842 11.2521 10.3419 10.3298 10.3419C9.4074 10.3419 8.65967 11.0842 8.65967 11.9998C8.65967 12.9154 9.4074 13.6577 10.3298 13.6577Z" fill="white"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M15.8964 13.6577C16.8188 13.6577 17.5665 12.9154 17.5665 11.9998C17.5665 11.0842 16.8188 10.3419 15.8964 10.3419C14.974 10.3419 14.2263 11.0842 14.2263 11.9998C14.2263 12.9154 14.974 13.6577 15.8964 13.6577Z" fill="white"></path></svg></template></div></td>
+	    <td><input id="user" name="user" type="text" placeholder="e.g., username"><div data-lastpass-icon-root="" style="position: relative !important; height: 0px !important; width: 0px !important; float: left !important;"><template shadowrootmode="closed"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" data-lastpass-icon="true" style="position: absolute; cursor: pointer; height: 17px; max-height: 17px; width: 22px; max-width: 22px; top: 2px; left: 156px; z-index: auto; color: rgb(215, 64, 58);"><rect x="0.680176" y="0.763062" width="22.6392" height="22.4737" rx="4" fill="currentColor"></rect><path fill-rule="evenodd" clip-rule="evenodd" d="M19.7935 7.9516C19.7935 7.64414 20.0427 7.3949 20.3502 7.3949C20.6576 7.3949 20.9069 7.64414 20.9069 7.9516V16.0487C20.9069 16.3562 20.6576 16.6054 20.3502 16.6054C20.0427 16.6054 19.7935 16.3562 19.7935 16.0487V7.9516Z" fill="white"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M4.76288 13.6577C5.68525 13.6577 6.43298 12.9154 6.43298 11.9998C6.43298 11.0842 5.68525 10.3419 4.76288 10.3419C3.8405 10.3419 3.09277 11.0842 3.09277 11.9998C3.09277 12.9154 3.8405 13.6577 4.76288 13.6577Z" fill="white"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M10.3298 13.6577C11.2521 13.6577 11.9999 12.9154 11.9999 11.9998C11.9999 11.0842 11.2521 10.3419 10.3298 10.3419C9.4074 10.3419 8.65967 11.0842 8.65967 11.9998C8.65967 12.9154 9.4074 13.6577 10.3298 13.6577Z" fill="white"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M15.8964 13.6577C16.8188 13.6577 17.5665 12.9154 17.5665 11.9998C17.5665 11.0842 16.8188 10.3419 15.8964 10.3419C14.974 10.3419 14.2263 11.0842 14.2263 11.9998C14.2263 12.9154 14.974 13.6577 15.8964 13.6577Z" fill="white"></path></svg></template></div></td>
 	  </tr>
 	  <tr>
 	    <th><label for="pass">Password</label></th>
-	    <td><input id="pass" name="pass" type="text"></td>
+	    <td><input id="pass" name="pass" type="text" placeholder="e.g., password"></td>
 	  </tr>
 	  <tr>
 	    <th><label for="uid">User ID (uid)</label></th>
@@ -304,6 +304,12 @@
       </fieldset>
 
     </form>
+
+    <hr style="margin: 2em 0; border: none; border-top: 1px solid #ccc;">
+    
+    <div style="text-align: center; color: #666; font-size: 0.9em; margin-top: 2em;">
+      <p>First published: 2010-11-20 | Last updated: 2025-08-04</p>
+    </div>
 
   
 
