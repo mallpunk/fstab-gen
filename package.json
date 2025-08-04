@@ -1,0 +1,44 @@
+{
+  "name": "fstab",
+  "version": "1.0.0",
+  "description": "A simple web UI to generate config lines for fstab",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mallpunk/fstab-gen.git"
+  },
+  "keywords": [
+    "fstab",
+    "filesystem",
+    "mount",
+    "linux"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mallpunk/fstab-gen/issues"
+  },
+  "homepage": "https://github.com/mallpunk/fstab-gen#readme",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^30.0.5",
+    "jsdom": "^23.0.1"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": [
+      "<rootDir>/tests/setup.js"
+    ],
+    "testMatch": [
+      "<rootDir>/tests/**/*.test.js"
+    ],
+    "collectCoverageFrom": [
+      "index.html"
+    ]
+  }
+}
