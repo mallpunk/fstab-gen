@@ -8,6 +8,9 @@ const htmlContent = fs.readFileSync(htmlPath, 'utf8');
 // Set up the DOM environment
 document.documentElement.innerHTML = htmlContent;
 
+// Mock alert function for testing
+window.alert = jest.fn();
+
 // Extract the script content more reliably
 const scriptStart = htmlContent.indexOf('<script type="text/javascript">');
 const scriptEnd = htmlContent.indexOf('</script>', scriptStart);

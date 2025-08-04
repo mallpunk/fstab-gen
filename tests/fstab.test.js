@@ -134,10 +134,17 @@ describe('fstab line generator', () => {
         filesystem: 'auto'
       });
 
+      // Mock alert to allow empty values for this test
+      const originalAlert = window.alert;
+      window.alert = jest.fn();
+      
       makeFstab();
       const output = getOutputValue();
 
       expect(output).toBe('\t\tauto\tauto,nouser,exec,rw,async,atime\t0 0');
+      
+      // Restore original alert
+      window.alert = originalAlert;
     });
 
     test('should handle NFS filesystem', () => {
@@ -164,6 +171,36 @@ describe('fstab line generator', () => {
       const output = getOutputValue();
 
       expect(output).toBe('//server/share\t/mnt/ssh\tsshfs\tauto,nouser,exec,rw,async,atime\t0 0');
+    });
+  });
+
+  describe('input validation', () => {
+    test('should handle valid numeric values correctly', () => {
+      createMockForm({
+        device: '/dev/sda1',
+        mountpoint: '/mnt/data',
+        filesystem: 'ext4',
+        dump: '1',
+        fsck: '2'
+      });
+
+      makeFstab();
+      const output = getOutputValue();
+
+      expect(output).toBe('/dev/sda1\t/mnt/data\text4\tauto,nouser,exec,rw,async,atime\t1 2');
+    });
+
+    test('should trim whitespace from input values', () => {
+      createMockForm({
+        device: '  /dev/sda1  ',
+        mountpoint: '  /mnt/data  ',
+        filesystem: '  ext4  '
+      });
+
+      makeFstab();
+      const output = getOutputValue();
+
+      expect(output).toBe('/dev/sda1\t/mnt/data\text4\tauto,nouser,exec,rw,async,atime\t0 0');
     });
   });
 

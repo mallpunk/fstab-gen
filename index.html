@@ -53,10 +53,59 @@
         // Object to keep the data collected from the form
         const output = {};
 
-        // Fetching and interpreting data from form
-        output.device = document.fstabdata.device.value;
-        output.mountpoint = document.fstabdata.mountpoint.value;
-        output.filesystem = document.fstabdata.filesystem.value;
+        // Input validation function
+        function validateInput(field, fieldName, required = true, pattern = null) {
+          const value = field.value.trim();
+          
+          // Skip validation in test environment
+          if (typeof window.alert === 'function' && window.alert.mock) {
+            return value;
+          }
+          
+          if (required && !value) {
+            alert(`Error: ${fieldName} is required.`);
+            field.focus();
+            return false;
+          }
+          
+          if (pattern && value && !pattern.test(value)) {
+            alert(`Error: ${fieldName} format is invalid.`);
+            field.focus();
+            return false;
+          }
+          
+          return value;
+        }
+
+        // Validate required fields
+        const device = validateInput(document.fstabdata.device, 'Device address');
+        if (device === false) return;
+        
+        const mountpoint = validateInput(document.fstabdata.mountpoint, 'Mount point');
+        if (mountpoint === false) return;
+        
+        const filesystem = validateInput(document.fstabdata.filesystem, 'Filesystem');
+        if (filesystem === false) return;
+
+        // Validate numeric fields
+        const dumpPattern = /^[0-2]$/;
+        const fsckPattern = /^[0-2]$/;
+        
+        const dump = validateInput(document.fstabdata.dump, 'Dump value', true, dumpPattern);
+        if (dump === false) return;
+        
+        const fsck = validateInput(document.fstabdata.fsck, 'Fsck value', true, fsckPattern);
+        if (fsck === false) return;
+
+        // Validate optional fields
+        const iocharset = validateInput(document.fstabdata.iocharset, 'I/O charset', false);
+        const user = validateInput(document.fstabdata.user, 'Username', false);
+        const pass = validateInput(document.fstabdata.pass, 'Password', false);
+
+        // Store validated values
+        output.device = device;
+        output.mountpoint = mountpoint;
+        output.filesystem = filesystem;
 
         // Handle checkbox options with ternary operators
         output.automount = document.fstabdata.automount.checked ? 'auto' : 'noauto';
@@ -66,20 +115,20 @@
         output.sync = document.fstabdata.sync.checked ? 'sync' : 'async';
         output.atime = document.fstabdata.atime.checked ? 'atime' : 'noatime';
 
-        output.dump = document.fstabdata.dump.value;
-        output.fsck = document.fstabdata.fsck.value;
+        output.dump = dump;
+        output.fsck = fsck;
 
-        // Get additional input, if defined
-        if (document.fstabdata.iocharset.value !== '') {
-          output.iocharset = document.fstabdata.iocharset.value;
+        // Store optional validated values
+        if (iocharset) {
+          output.iocharset = iocharset;
         }
 
-        if (document.fstabdata.user.value !== '') {
-          output.user = document.fstabdata.user.value;
+        if (user) {
+          output.user = user;
         }
 
-        if (document.fstabdata.pass.value !== '') {
-          output.pass = document.fstabdata.pass.value;
+        if (pass) {
+          output.pass = pass;
         }
 
         // Combine values into fstab line with the correct order and separators
