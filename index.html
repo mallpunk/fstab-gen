@@ -46,7 +46,10 @@
     </style>
 
     <script type="text/javascript">
-      function makeFstab() {
+      "use strict";
+      
+      // Make function globally accessible
+      window.makeFstab = function makeFstab() {
         // Object to keep the data collected from the form
         const output = {};
 

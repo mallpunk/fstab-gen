@@ -16,8 +16,8 @@ const scriptContent = htmlContent.substring(scriptStart + 31, scriptEnd);
 // Execute the script in the global scope
 eval(scriptContent);
 
-// Make makeFstab available globally
-global.makeFstab = makeFstab;
+// Make makeFstab available globally (works with both strict and non-strict mode)
+global.makeFstab = window.makeFstab || makeFstab;
 
 // Helper function to create a mock form with specific values
 global.createMockForm = (values = {}) => {
