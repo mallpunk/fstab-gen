@@ -40,6 +40,8 @@ global.createMockForm = (values = {}) => {
     dump: { type: 'text', value: values.dump || '0' },
     fsck: { type: 'text', value: values.fsck || '0' },
     iocharset: { type: 'text', value: values.iocharset || '' },
+    credentials: { type: 'text', value: values.credentials || '' },
+    useUserPass: { type: 'checkbox', checked: values.useUserPass || false },
     user: { type: 'text', value: values.user || '' },
     pass: { type: 'text', value: values.pass || '' },
     uid: { type: 'text', value: values.uid || '' },

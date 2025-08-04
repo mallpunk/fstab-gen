@@ -86,6 +86,7 @@ describe('fstab line generator', () => {
         device: '//server/share',
         mountpoint: '/mnt/network',
         filesystem: 'cifs',
+        useUserPass: true,
         user: 'username',
         pass: 'password'
       });
@@ -102,6 +103,7 @@ describe('fstab line generator', () => {
         mountpoint: '/mnt/network',
         filesystem: 'cifs',
         iocharset: 'utf8',
+        useUserPass: true,
         user: 'username',
         pass: 'password'
       });
@@ -310,6 +312,65 @@ describe('fstab line generator', () => {
       const output = getOutputValue();
 
       expect(output).toBe('/dev/sda1\t/mnt/data\text4\tauto,nouser,exec,rw,async,atime\t0 0');
+    });
+
+    test('should include credentials when provided', () => {
+      createMockForm({
+        device: '//server/share',
+        mountpoint: '/mnt/network',
+        filesystem: 'cifs',
+        credentials: '/etc/samba/credentials'
+      });
+
+      makeFstab();
+      const output = getOutputValue();
+
+      expect(output).toBe('//server/share\t/mnt/network\tcifs\tcredentials=/etc/samba/credentials,auto,nouser,exec,rw,async,atime\t0 0');
+    });
+
+    test('should include username and password when useUserPass is checked', () => {
+      createMockForm({
+        device: '//server/share',
+        mountpoint: '/mnt/network',
+        filesystem: 'cifs',
+        useUserPass: true,
+        user: 'username',
+        pass: 'password'
+      });
+
+      makeFstab();
+      const output = getOutputValue();
+
+      expect(output).toBe('//server/share\t/mnt/network\tcifs\tuser=username,pass=password,auto,nouser,exec,rw,async,atime\t0 0');
+    });
+
+    test('should not include username and password when useUserPass is not checked', () => {
+      createMockForm({
+        device: '//server/share',
+        mountpoint: '/mnt/network',
+        filesystem: 'cifs',
+        user: 'username',
+        pass: 'password'
+      });
+
+      makeFstab();
+      const output = getOutputValue();
+
+      expect(output).toBe('//server/share\t/mnt/network\tcifs\tauto,nouser,exec,rw,async,atime\t0 0');
+    });
+
+    test('should escape spaces in credentials paths', () => {
+      createMockForm({
+        device: '//server/share',
+        mountpoint: '/mnt/network',
+        filesystem: 'cifs',
+        credentials: '/etc/samba/my credentials'
+      });
+
+      makeFstab();
+      const output = getOutputValue();
+
+      expect(output).toBe('//server/share\t/mnt/network\tcifs\tcredentials=/etc/samba/my\\040credentials,auto,nouser,exec,rw,async,atime\t0 0');
     });
 
 
