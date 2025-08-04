@@ -42,6 +42,9 @@ global.createMockForm = (values = {}) => {
     iocharset: { type: 'text', value: values.iocharset || '' },
     user: { type: 'text', value: values.user || '' },
     pass: { type: 'text', value: values.pass || '' },
+    uid: { type: 'text', value: values.uid || '' },
+    gid: { type: 'text', value: values.gid || '' },
+    umask: { type: 'text', value: values.umask || '' },
     output: { type: 'text', value: '' }
   };
   

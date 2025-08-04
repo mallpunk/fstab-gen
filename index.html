@@ -101,6 +101,15 @@
         const iocharset = validateInput(document.fstabdata.iocharset, 'I/O charset', false);
         const user = validateInput(document.fstabdata.user, 'Username', false);
         const pass = validateInput(document.fstabdata.pass, 'Password', false);
+        
+        // Validate numeric optional fields
+        const uidPattern = /^[0-9]+$/;
+        const gidPattern = /^[0-9]+$/;
+        const umaskPattern = /^[0-7]{3,4}$/;
+        
+        const uid = validateInput(document.fstabdata.uid, 'User ID', false, uidPattern);
+        const gid = validateInput(document.fstabdata.gid, 'Group ID', false, gidPattern);
+        const umask = validateInput(document.fstabdata.umask, 'Umask', false, umaskPattern);
 
         // Store validated values
         output.device = device;
@@ -131,6 +140,18 @@
           output.pass = pass;
         }
 
+        if (uid) {
+          output.uid = uid;
+        }
+
+        if (gid) {
+          output.gid = gid;
+        }
+
+        if (umask) {
+          output.umask = umask;
+        }
+
         // Combine values into fstab line with the correct order and separators
         // Where and what
         let outputstring = `${output.device}\t${output.mountpoint}\t${output.filesystem}\t`;
@@ -144,6 +165,15 @@
         }
         if (output.pass) {
           outputstring += `pass=${output.pass},`;
+        }
+        if (output.uid) {
+          outputstring += `uid=${output.uid},`;
+        }
+        if (output.gid) {
+          outputstring += `gid=${output.gid},`;
+        }
+        if (output.umask) {
+          outputstring += `umask=${output.umask},`;
         }
 
         // Standard options
@@ -239,6 +269,18 @@
 	  <tr>
 	    <th><label for="pass">Password</label></th>
 	    <td><input id="pass" name="pass" type="text"></td>
+	  </tr>
+	  <tr>
+	    <th><label for="uid">User ID (uid)</label></th>
+	    <td><input id="uid" name="uid" type="text" placeholder="e.g., 1000"></td>
+	  </tr>
+	  <tr>
+	    <th><label for="gid">Group ID (gid)</label></th>
+	    <td><input id="gid" name="gid" type="text" placeholder="e.g., 1000"></td>
+	  </tr>
+	  <tr>
+	    <th><label for="umask">Umask</label></th>
+	    <td><input id="umask" name="umask" type="text" placeholder="e.g., 022"></td>
 	  </tr>
 	</tbody></table>
 	

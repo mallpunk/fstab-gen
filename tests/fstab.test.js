@@ -172,6 +172,51 @@ describe('fstab line generator', () => {
 
       expect(output).toBe('//server/share\t/mnt/ssh\tsshfs\tauto,nouser,exec,rw,async,atime\t0 0');
     });
+
+    test('should include uid and gid when provided', () => {
+      createMockForm({
+        device: '//server/share',
+        mountpoint: '/mnt/network',
+        filesystem: 'cifs',
+        uid: '1000',
+        gid: '1000'
+      });
+
+      makeFstab();
+      const output = getOutputValue();
+
+      expect(output).toBe('//server/share\t/mnt/network\tcifs\tuid=1000,gid=1000,auto,nouser,exec,rw,async,atime\t0 0');
+    });
+
+    test('should include umask when provided', () => {
+      createMockForm({
+        device: '/dev/sda1',
+        mountpoint: '/mnt/windows',
+        filesystem: 'vfat',
+        umask: '022'
+      });
+
+      makeFstab();
+      const output = getOutputValue();
+
+      expect(output).toBe('/dev/sda1\t/mnt/windows\tvfat\tumask=022,auto,nouser,exec,rw,async,atime\t0 0');
+    });
+
+    test('should include all new options when provided', () => {
+      createMockForm({
+        device: '//server/share',
+        mountpoint: '/mnt/network',
+        filesystem: 'cifs',
+        uid: '1000',
+        gid: '1000',
+        umask: '077'
+      });
+
+      makeFstab();
+      const output = getOutputValue();
+
+      expect(output).toBe('//server/share\t/mnt/network\tcifs\tuid=1000,gid=1000,umask=077,auto,nouser,exec,rw,async,atime\t0 0');
+    });
   });
 
   describe('input validation', () => {
@@ -201,6 +246,35 @@ describe('fstab line generator', () => {
       const output = getOutputValue();
 
       expect(output).toBe('/dev/sda1\t/mnt/data\text4\tauto,nouser,exec,rw,async,atime\t0 0');
+    });
+
+    test('should handle valid uid and gid values', () => {
+      createMockForm({
+        device: '/dev/sda1',
+        mountpoint: '/mnt/data',
+        filesystem: 'ext4',
+        uid: '1000',
+        gid: '1000'
+      });
+
+      makeFstab();
+      const output = getOutputValue();
+
+      expect(output).toBe('/dev/sda1\t/mnt/data\text4\tuid=1000,gid=1000,auto,nouser,exec,rw,async,atime\t0 0');
+    });
+
+    test('should handle valid umask values', () => {
+      createMockForm({
+        device: '/dev/sda1',
+        mountpoint: '/mnt/data',
+        filesystem: 'ext4',
+        umask: '022'
+      });
+
+      makeFstab();
+      const output = getOutputValue();
+
+      expect(output).toBe('/dev/sda1\t/mnt/data\text4\tumask=022,auto,nouser,exec,rw,async,atime\t0 0');
     });
   });
 
