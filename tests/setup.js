@@ -46,6 +46,7 @@ global.createMockForm = (values = {}) => {
     gid: { type: 'text', value: values.gid || '' },
     umask: { type: 'text', value: values.umask || '' },
     zfsutil: { type: 'checkbox', checked: values.zfsutil || false },
+    size: { type: 'text', value: values.size || '' },
     output: { type: 'text', value: '' }
   };
   

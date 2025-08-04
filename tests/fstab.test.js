@@ -271,6 +271,47 @@ describe('fstab line generator', () => {
       expect(output).toBe('/dev/sda1\t/mnt/my\\040data\text4\tauto,nouser,exec,rw,async,atime\t0 0');
     });
 
+    test('should handle tmpfs filesystem', () => {
+      createMockForm({
+        device: 'tmpfs',
+        mountpoint: '/tmp',
+        filesystem: 'tmpfs'
+      });
+
+      makeFstab();
+      const output = getOutputValue();
+
+      expect(output).toBe('tmpfs\t/tmp\ttmpfs\tauto,nouser,exec,rw,async,atime\t0 0');
+    });
+
+    test('should include size option for tmpfs when provided', () => {
+      createMockForm({
+        device: 'tmpfs',
+        mountpoint: '/tmp',
+        filesystem: 'tmpfs',
+        size: '512M'
+      });
+
+      makeFstab();
+      const output = getOutputValue();
+
+      expect(output).toBe('tmpfs\t/tmp\ttmpfs\tsize=512M,auto,nouser,exec,rw,async,atime\t0 0');
+    });
+
+    test('should ignore size option for non-tmpfs filesystems', () => {
+      createMockForm({
+        device: '/dev/sda1',
+        mountpoint: '/mnt/data',
+        filesystem: 'ext4',
+        size: '512M'
+      });
+
+      makeFstab();
+      const output = getOutputValue();
+
+      expect(output).toBe('/dev/sda1\t/mnt/data\text4\tauto,nouser,exec,rw,async,atime\t0 0');
+    });
+
 
   });
 

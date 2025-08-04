@@ -155,6 +155,12 @@
         // ZFS-specific options
         output.zfsutil = document.fstabdata.zfsutil.checked;
 
+        // TMPFS-specific options
+        const size = validateInput(document.fstabdata.size, 'Size', false);
+        if (size) {
+          output.size = size;
+        }
+
         // Function to escape spaces in mount points for fstab
         function escapeMountPoint(mountpoint) {
           return mountpoint.replace(/ /g, '\\040');
@@ -185,6 +191,9 @@
         }
         if (output.zfsutil) {
           outputstring += `zfsutil,`;
+        }
+        if (output.size && output.filesystem === 'tmpfs') {
+          outputstring += `size=${output.size},`;
         }
 
         // Standard options
@@ -326,6 +335,7 @@
 		<option value="sshfs">sshfs</option>
 		<option value="zfs">zfs</option>
 		<option value="xfs">xfs</option>
+		<option value="tmpfs">tmpfs</option>
 	      </select>
 	    </td>
 	    <td><input id="automount" name="automount" type="checkbox" checked=""></td>
@@ -367,6 +377,10 @@
 	  <tr>
 	    <th><label for="zfsutil">ZFS util</label></th>
 	    <td><input id="zfsutil" name="zfsutil" type="checkbox"></td>
+	  </tr>
+	  <tr>
+	    <th><label for="size">Size (tmpfs only)</label></th>
+	    <td><input id="size" name="size" type="text" placeholder="e.g., 512M"></td>
 	  </tr>
 	</tbody></table>
 	
