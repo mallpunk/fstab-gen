@@ -155,9 +155,14 @@
         // ZFS-specific options
         output.zfsutil = document.fstabdata.zfsutil.checked;
 
+        // Function to escape spaces in mount points for fstab
+        function escapeMountPoint(mountpoint) {
+          return mountpoint.replace(/ /g, '\\040');
+        }
+
         // Combine values into fstab line with the correct order and separators
         // Where and what
-        let outputstring = `${output.device}\t${output.mountpoint}\t${output.filesystem}\t`;
+        let outputstring = `${output.device}\t${escapeMountPoint(output.mountpoint)}\t${output.filesystem}\t`;
 
         // Optional options
         if (output.iocharset) {
@@ -187,6 +192,75 @@
 
         // Output the output
         document.fstabdata.output.value = outputstring;
+        
+        // Validate the generated fstab line (only in production, not in test environment)
+        if (typeof window.alert === 'function' && !window.alert.mock) {
+          validateFstabLine(outputstring);
+        }
+      }
+
+      // Function to validate fstab line format
+      window.validateFstabLine = function validateFstabLine(fstabLine) {
+        // Split by tabs to get the 5 fields
+        const fields = fstabLine.split('\t');
+        
+        if (fields.length !== 5) {
+          alert('Error: Invalid fstab line format. Expected 5 tab-separated fields, got ' + fields.length);
+          return false;
+        }
+        
+        const [device, mountpoint, filesystem, options, dumpFsck] = fields;
+        
+        // Split dump/fsck field (space-separated)
+        const dumpFsckParts = dumpFsck.trim().split(' ');
+        if (dumpFsckParts.length !== 2) {
+          alert('Error: Dump/fsck field should be space-separated');
+          return false;
+        }
+        const [dump, fsck] = dumpFsckParts;
+        
+        // Validate device field
+        if (!device || device.trim() === '') {
+          alert('Error: Device field is empty');
+          return false;
+        }
+        if (device.includes(' ')) {
+          alert('Error: Device field cannot contain spaces');
+          return false;
+        }
+        
+        // Validate mountpoint field
+        if (!mountpoint || mountpoint.trim() === '') {
+          alert('Error: Mount point field is empty');
+          return false;
+        }
+        
+        // Validate filesystem field
+        if (!filesystem || filesystem.trim() === '') {
+          alert('Error: Filesystem field is empty');
+          return false;
+        }
+        
+        // Validate options field
+        if (!options || options.trim() === '') {
+          alert('Error: Options field is empty');
+          return false;
+        }
+        
+        // Validate dump field (should be 0 or 1)
+        if (!/^[01]$/.test(dump.trim())) {
+          alert('Error: Dump field should be 0 or 1');
+          return false;
+        }
+        
+        // Validate fsck field (should be 0, 1, or 2)
+        if (!/^[012]$/.test(fsck.trim())) {
+          alert('Error: Fsck field should be 0, 1, or 2');
+          return false;
+        }
+        
+        // If we get here, the line is valid
+        return true;
       }
 
       // Add event listener when DOM is loaded

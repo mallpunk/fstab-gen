@@ -257,6 +257,21 @@ describe('fstab line generator', () => {
 
       expect(output).toBe('/dev/sda1\t/mnt/xfs\txfs\tauto,nouser,exec,rw,async,atime\t0 0');
     });
+
+    test('should escape spaces in mount points', () => {
+      createMockForm({
+        device: '/dev/sda1',
+        mountpoint: '/mnt/my data',
+        filesystem: 'ext4'
+      });
+
+      makeFstab();
+      const output = getOutputValue();
+
+      expect(output).toBe('/dev/sda1\t/mnt/my\\040data\text4\tauto,nouser,exec,rw,async,atime\t0 0');
+    });
+
+
   });
 
   describe('input validation', () => {
